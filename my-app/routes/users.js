@@ -9,35 +9,40 @@ var connection = mysql.createConnection({
   password: 'GB48fxvcrcOqcGiC'
 });
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
-//POST : Crear elemento
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-var id = 0;
+//Obtener secuencia de usuarios
+var id_user = function() {
+  var res = 0;
+  db.query('select count(*) as seq from user', function(err, rows, fields) {
+  });
+  return res;
+}
+
 
 router.post('/signin', function (req, res) {
-  id = id +1;
-  var user = req.body;
+  if(req.body.tipo == 'admin' || req.body.tipo == 'user'){
 
-  connection.connect();
- 
-  connection.query('Insert into user(id_user) value (+'+id+')', function (err, rows, fields) {
-    try {
-      if(err) throw err;
-      //var id = rows[0].seq + 1;
-      //json.res(id);
-    }catch(e){
-      console.log("Error: "+e)
-    }
-  });
+    connection.connect();
+    
+    connection.query('Insert into parcial_2.user(nombre,clave,tipo) value (\''+req.body.nombre+'\',\''+
+                                                                     req.body.clave+'\',\''+
+                                                                     req.body.tipo+'\')', function (err, rows, fields) {
+      try {
+        if(err) throw err;
+      }catch(e){
+        console.log("Error: "+e)
+      }
+    });
+  
+    connection.end();
+    res.send({status:'OK'});
+  }else{
+    res.send({status:'NOOK',description:'El usuario tiene que ser de tipo admin o user'});
+  }
 
-  connection.end();
-  console.log(id);
 });
 
 

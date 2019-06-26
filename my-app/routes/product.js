@@ -21,12 +21,13 @@ router.post('/producto', function (req, res) {
                                                                                                                        req.body.stock+')', function (err, rows, fields) {
         try {
             if (err) throw err;
-            res.json(rows);
         } catch (e) {
             console.log("Error: " + e)
         }
     });
     connection.end();
+
+    res.send({status:'OK'});
 });
 
 router.get('/producto', function (req, res) {
@@ -61,12 +62,12 @@ router.delete('/producto/:id', function (req, res) {
     connection.query('delete from parcial_2.producto where id_producto = ' + req.params.id , function (err, rows, fields) {
         try {
             if (err) throw err;
-            res.json({status: 'OK'});
         } catch (e) {
             console.log("Error: " + e)
         }
     });
     connection.end();
+    res.json({status: 'OK'});
 });
 
 
