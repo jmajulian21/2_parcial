@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
-
+var tocket = require('../jwt/jwt');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -9,6 +9,7 @@ var connection = mysql.createConnection({
     password: 'GB48fxvcrcOqcGiC'
 });
 
+//Punto 3
 router.post('/producto', function (req, res) {
     var id = 1;
 
@@ -30,8 +31,9 @@ router.post('/producto', function (req, res) {
     res.send({status:'OK'});
 });
 
+//Punto 4
 router.get('/producto', function (req, res) {
-
+    
     connection.connect();
     connection.query('select * from parcial_2.producto', function (err, rows, fields) {
         try {
@@ -44,6 +46,7 @@ router.get('/producto', function (req, res) {
     connection.end();
 });
 
+//Punto 5
 router.get('/producto/:marca', function (req, res) {
     connection.connect();
     connection.query('select * from parcial_2.producto where marca like \''+req.params.marca +'\'', function (err, rows, fields) {
@@ -57,7 +60,10 @@ router.get('/producto/:marca', function (req, res) {
     connection.end();
 });
 
+//Punto 6
 router.delete('/producto/:id', function (req, res) {
+    var decodeUser = tocket.decodeJWT(req.headers.tocket); //undefined
+    
     connection.connect();
     connection.query('delete from parcial_2.producto where id_producto = ' + req.params.id , function (err, rows, fields) {
         try {
